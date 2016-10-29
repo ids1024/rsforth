@@ -1,32 +1,32 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum Builtin {
-    dot,
-    plus,
-    minus,
-    times,
-    divide,
+    Dot,
+    Plus,
+    Minus,
+    Times,
+    Divide,
 }
 
 impl Builtin {
     pub fn call(&self, stack: &mut Vec<i32>) {
         match *self {
-            Builtin::dot => print!("{}", stack.pop().unwrap()),
-            Builtin::plus => {
+            Builtin::Dot => print!("{}", stack.pop().unwrap()),
+            Builtin::Plus => {
                 let n2 = stack.pop().unwrap();
                 let n1 = stack.pop().unwrap();
                 stack.push(n1 + n2);
             }
-            Builtin::minus => {
+            Builtin::Minus => {
                 let n2 = stack.pop().unwrap();
                 let n1 = stack.pop().unwrap();
                 stack.push(n1 - n2);
             }
-            Builtin::times => {
+            Builtin::Times => {
                 let n2 = stack.pop().unwrap();
                 let n1 = stack.pop().unwrap();
                 stack.push(n1 * n2);
             }
-            Builtin::divide => {
+            Builtin::Divide => {
                 let n2 = stack.pop().unwrap();
                 let n1 = stack.pop().unwrap();
                 stack.push(n1 / n2);

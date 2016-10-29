@@ -10,41 +10,41 @@ use builtins::Builtin;
 
 #[derive(Clone, Debug, PartialEq)]
 enum Word {
-    custom(Rc<Vec<Branch>>),
-    builtin(Builtin),
-    int(i32),
-    float(f32),
-    parenthesis,
-    colon,
-    semicolon,
-    _if,
-    then,
-    _else,
-    dotquote,
+    Custom(Rc<Vec<Branch>>),
+    Builtin(Builtin),
+    Int(i32),
+    Float(f32),
+    Parenthesis,
+    Colon,
+    Semicolon,
+    If,
+    Then,
+    Else,
+    Dotquote,
 }
 
 #[derive(Debug, PartialEq)]
 enum Branch {
-    custom(Rc<Vec<Branch>>),
-    builtin(Builtin),
-    int(i32),
-    float(f32),
-    ifelse(Vec<Branch>, Vec<Branch>),
-    dotquote(String),
+    Custom(Rc<Vec<Branch>>),
+    Builtin(Builtin),
+    Int(i32),
+    Float(f32),
+    IfElse(Vec<Branch>, Vec<Branch>),
+    Dotquote(String),
 }
 
 impl Branch {
     fn call(&self, stack: &mut Vec<i32>) {
         match self {
-            &Branch::custom(ref branches) => {
+            &Branch::Custom(ref branches) => {
                 for branch in branches.iter() {
                     branch.call(stack);
                 }
             }
-            &Branch::builtin(ref builtin) => builtin.call(stack),
-            &Branch::int(int) => stack.push(int),
-            &Branch::float(float) => stack.push(float as i32), //XXX
-            &Branch::ifelse(ref ifbranches, ref elsebranches) => {
+            &Branch::Builtin(ref builtin) => builtin.call(stack),
+            &Branch::Int(int) => stack.push(int),
+            &Branch::Float(float) => stack.push(float as i32), //XXX
+            &Branch::IfElse(ref ifbranches, ref elsebranches) => {
                 if stack.pop().unwrap() == 0 {
                     for branch in ifbranches.iter() {
                         branch.call(stack);
@@ -55,7 +55,7 @@ impl Branch {
                     }
                 }
             }
-            &Branch::dotquote(ref text) => print!("{}", text),
+            &Branch::Dotquote(ref text) => print!("{}", text),
         }
     }
 }
@@ -69,9 +69,9 @@ impl Dictionary {
         if let Some(word) = self.items.get(name) {
             Some(word.clone())
         } else if let Ok(num) = name.parse::<i32>() {
-            Some(Word::int(num))
+            Some(Word::Int(num))
         } else if let Ok(num) = name.parse::<f32>() {
-            Some(Word::float(num))
+            Some(Word::Float(num))
         } else {
             None
         }
@@ -88,18 +88,18 @@ impl Dictionary {
 impl Default for Dictionary {
     fn default() -> Dictionary {
         let mut dict = HashMap::new();
-        dict.insert(".\"".to_owned(), Word::dotquote);
-        dict.insert(".".to_owned(), Word::builtin(Builtin::dot));
-        dict.insert("+".to_owned(), Word::builtin(Builtin::plus));
-        dict.insert("-".to_owned(), Word::builtin(Builtin::minus));
-        dict.insert("*".to_owned(), Word::builtin(Builtin::times));
-        dict.insert("/".to_owned(), Word::builtin(Builtin::divide));
-        dict.insert(":".to_owned(), Word::colon);
-        dict.insert(";".to_owned(), Word::semicolon);
-        dict.insert("if".to_owned(), Word::_if);
-        dict.insert("then".to_owned(), Word::then);
-        dict.insert("else".to_owned(), Word::_else);
-        dict.insert("(".to_owned(), Word::parenthesis);
+        dict.insert(".\"".to_owned(), Word::Dotquote);
+        dict.insert(".".to_owned(), Word::Builtin(Builtin::Dot));
+        dict.insert("+".to_owned(), Word::Builtin(Builtin::Plus));
+        dict.insert("-".to_owned(), Word::Builtin(Builtin::Minus));
+        dict.insert("*".to_owned(), Word::Builtin(Builtin::Times));
+        dict.insert("/".to_owned(), Word::Builtin(Builtin::Divide));
+        dict.insert(":".to_owned(), Word::Colon);
+        dict.insert(";".to_owned(), Word::Semicolon);
+        dict.insert("if".to_owned(), Word::If);
+        dict.insert("then".to_owned(), Word::Then);
+        dict.insert("else".to_owned(), Word::Else);
+        dict.insert("(".to_owned(), Word::Parenthesis);
         Dictionary { items: dict }
     }
 }
@@ -128,40 +128,40 @@ fn next_word(chars: &mut Chars) -> Option<String> {
 fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Option<Branch> {
     if let Some(word) = dict.get(word_str) {
         match word {
-            Word::custom(x) => Some(Branch::custom(x)),
-            Word::builtin(x) => Some(Branch::builtin(x)),
-            Word::int(x) => Some(Branch::int(x)),
-            Word::float(x) => Some(Branch::float(x)),
-            Word::dotquote => {
+            Word::Custom(x) => Some(Branch::Custom(x)),
+            Word::Builtin(x) => Some(Branch::Builtin(x)),
+            Word::Int(x) => Some(Branch::Int(x)),
+            Word::Float(x) => Some(Branch::Float(x)),
+            Word::Dotquote => {
                 let text = chars.take_while(|x| *x != '"').collect();
-                Some(Branch::dotquote(text))
+                Some(Branch::Dotquote(text))
             }
-            Word::parenthesis => {
+            Word::Parenthesis => {
                 // Consumes all characters up to next )
                 chars.take_while(|x| *x != ')').count();
                 None
             }
-            Word::colon => {
+            Word::Colon => {
                 let name = next_word(chars).unwrap();
                 let mut inner_branches: Vec<Branch> = Vec::new();
                 while let Some(inner_word_str) = next_word(chars) {
-                    if dict.get(&inner_word_str) == Some(Word::semicolon) {
+                    if dict.get(&inner_word_str) == Some(Word::Semicolon) {
                         break;
                     }
                     if let Some(branch) = parse_word(&inner_word_str, chars, dict) {
                         inner_branches.push(branch);
                     }
                 }
-                dict.set(&name, Word::custom(Rc::new(inner_branches)));
+                dict.set(&name, Word::Custom(Rc::new(inner_branches)));
                 None
             }
-            Word::_if => {
+            Word::If => {
                 let mut ifbranches = Vec::new();
                 let mut elsebranches = Vec::new();
                 while let Some(inner_word_str) = next_word(chars) {
-                    if dict.get(&inner_word_str) == Some(Word::_else) {
+                    if dict.get(&inner_word_str) == Some(Word::Else) {
                         while let Some(inner_word_str) = next_word(chars) {
-                            if dict.get(&inner_word_str) == Some(Word::then) {
+                            if dict.get(&inner_word_str) == Some(Word::Then) {
                                 break;
                             }
                         }
@@ -169,16 +169,16 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
                             elsebranches.push(branch);
                         }
                         break;
-                    } else if dict.get(&inner_word_str) == Some(Word::then) {
+                    } else if dict.get(&inner_word_str) == Some(Word::Then) {
                         break;
                     }
                     if let Some(branch) = parse_word(&inner_word_str, chars, dict) {
                         ifbranches.push(branch);
                     }
                 }
-                Some(Branch::ifelse(ifbranches, elsebranches))
+                Some(Branch::IfElse(ifbranches, elsebranches))
             }
-            Word::semicolon | Word::_else | Word::then => {
+            Word::Semicolon | Word::Else | Word::Then => {
                 panic!("Invalid here");
             }
         }
