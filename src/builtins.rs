@@ -13,6 +13,7 @@ pub enum Builtin {
     GreaterThan,
     LessEqual,
     GreaterEqual,
+    Emit,
 }
 
 impl Builtin {
@@ -63,6 +64,10 @@ impl Builtin {
                 let n2 = stack.popi();
                 let n1 = stack.popi();
                 stack.pushb(n1 >= n2);
+            }
+            Builtin::Emit => {
+                let c = stack.popc();
+                print!("{}", c);
             }
         }
     }

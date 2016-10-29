@@ -90,11 +90,10 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
     }
 }
 
-pub fn parse(code: &mut Chars) -> Vec<Branch> {
+pub fn parse(code: &mut Chars, dict: &mut Dictionary) -> Vec<Branch> {
     let mut branches: Vec<Branch> = Vec::new();
-    let mut dict = Dictionary::default();
     while let Some(word_str) = next_word(code) {
-        if let Some(branch) = parse_word(&word_str, code, &mut dict) {
+        if let Some(branch) = parse_word(&word_str, code, dict) {
             branches.push(branch);
         }
     }
