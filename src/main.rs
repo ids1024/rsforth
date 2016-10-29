@@ -14,8 +14,6 @@ enum Builtin {
 
 #[derive(Clone)]
 enum Word {
-    //custom(Vec<String>),
-    //custom(usize),
     custom(Rc<Vec<String>>),
     builtin(Builtin),
     colon,
@@ -23,23 +21,13 @@ enum Word {
     _if,
     then,
     _else,
-    //ifelse(Vec<String>, Vec<String>),
-    //define(String, Vec<String>),
-    //dot,
-    //plus,
-    //minus,
-    //times,
-    //divide,
-    //dotquote(<String>),
     dotquote,
     int(i32),
     float(f32),
 }
 
 enum Branch {
-    //word(Word),
     custom(Rc<Vec<String>>)
-    //custom(Vec<String>),
     builtin(Builtin),
     ifelse(Vec<String>, Vec<String>),
     dotquote(<String>)
