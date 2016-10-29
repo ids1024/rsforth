@@ -1,10 +1,4 @@
-fn bool_to_forth(value: bool) -> i32 {
-    if value {
-        -1
-    } else {
-        0
-    }
-}
+use stack::Stack;
 
 /// Represents a builtin function
 #[derive(Debug, Clone, PartialEq)]
@@ -22,53 +16,53 @@ pub enum Builtin {
 }
 
 impl Builtin {
-    pub fn call(&self, stack: &mut Vec<i32>) {
+    pub fn call(&self, stack: &mut Stack) {
         match *self {
-            Builtin::Dot => print!("{}", stack.pop().unwrap()),
+            Builtin::Dot => print!("{}", stack.popi()),
             Builtin::Plus => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(n1 + n2);
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1 + n2);
             }
             Builtin::Minus => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(n1 - n2);
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1 - n2);
             }
             Builtin::Times => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(n1 * n2);
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1 * n2);
             }
             Builtin::Divide => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(n1 / n2);
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1 / n2);
             }
             Builtin::Equal => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(bool_to_forth(n1 == n2));
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushb(n1 == n2);
             }
             Builtin::LessThan => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(bool_to_forth(n1 < n2));
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushb(n1 < n2);
             }
             Builtin::GreaterThan => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(bool_to_forth(n1 > n2));
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushb(n1 > n2);
             }
             Builtin::LessEqual => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(bool_to_forth(n1 <= n2));
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushb(n1 <= n2);
             }
             Builtin::GreaterEqual => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(bool_to_forth(n1 >= n2));
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushb(n1 >= n2);
             }
         }
     }

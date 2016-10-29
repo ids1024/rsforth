@@ -7,8 +7,10 @@ mod dictionary;
 mod word;
 mod branch;
 mod parser;
+mod stack;
 
 use parser::parse;
+use stack::Stack;
 
 fn main() {
     let path = env::args().nth(1).unwrap();
@@ -18,7 +20,7 @@ fn main() {
 
     let branches = parse(&mut code.chars());
     // println!("{:#?}", parse(&mut code.chars()));
-    let mut stack = Vec::new();
+    let mut stack = Stack::default();
     for branch in branches {
         branch.call(&mut stack);
     }

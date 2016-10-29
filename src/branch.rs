@@ -1,5 +1,6 @@
 use std::rc::Rc;
 use builtins::Builtin;
+use stack::Stack;
 
 /// Represents a branch in the syntax tree
 #[derive(Debug, PartialEq)]
@@ -13,7 +14,7 @@ pub enum Branch {
 }
 
 impl Branch {
-    pub fn call(&self, stack: &mut Vec<i32>) {
+    pub fn call(&self, stack: &mut Stack) {
         match self {
             &Branch::Custom(ref branches) => {
                 for branch in branches.iter() {
@@ -21,10 +22,10 @@ impl Branch {
                 }
             }
             &Branch::Builtin(ref builtin) => builtin.call(stack),
-            &Branch::Int(int) => stack.push(int),
-            &Branch::Float(float) => stack.push(float as i32), //XXX
+            &Branch::Int(int) => stack.pushi(int),
+            &Branch::Float(float) => stack.pushi(float as i32), //XXX
             &Branch::IfElse(ref ifbranches, ref elsebranches) => {
-                if stack.pop().unwrap() == 0 {
+                if stack.popb() {
                     for branch in ifbranches.iter() {
                         branch.call(stack);
                     }
