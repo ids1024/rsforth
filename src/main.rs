@@ -3,106 +3,15 @@ use std::io::prelude::*;
 use std::fs::File;
 use std::str::Chars;
 use std::rc::Rc;
-use std::collections::HashMap;
 
 mod builtins;
-use builtins::Builtin;
+mod dictionary;
+mod word;
+mod branch;
 
-#[derive(Clone, Debug, PartialEq)]
-enum Word {
-    Custom(Rc<Vec<Branch>>),
-    Builtin(Builtin),
-    Int(i32),
-    Float(f32),
-    Parenthesis,
-    Colon,
-    Semicolon,
-    If,
-    Then,
-    Else,
-    Dotquote,
-}
-
-#[derive(Debug, PartialEq)]
-enum Branch {
-    Custom(Rc<Vec<Branch>>),
-    Builtin(Builtin),
-    Int(i32),
-    Float(f32),
-    IfElse(Vec<Branch>, Vec<Branch>),
-    Dotquote(String),
-}
-
-impl Branch {
-    fn call(&self, stack: &mut Vec<i32>) {
-        match self {
-            &Branch::Custom(ref branches) => {
-                for branch in branches.iter() {
-                    branch.call(stack);
-                }
-            }
-            &Branch::Builtin(ref builtin) => builtin.call(stack),
-            &Branch::Int(int) => stack.push(int),
-            &Branch::Float(float) => stack.push(float as i32), //XXX
-            &Branch::IfElse(ref ifbranches, ref elsebranches) => {
-                if stack.pop().unwrap() == 0 {
-                    for branch in ifbranches.iter() {
-                        branch.call(stack);
-                    }
-                } else {
-                    for branch in elsebranches.iter() {
-                        branch.call(stack);
-                    }
-                }
-            }
-            &Branch::Dotquote(ref text) => print!("{}", text),
-        }
-    }
-}
-
-struct Dictionary {
-    items: HashMap<String, Word>,
-}
-
-impl Dictionary {
-    fn get(&self, name: &str) -> Option<Word> {
-        if let Some(word) = self.items.get(name) {
-            Some(word.clone())
-        } else if let Ok(num) = name.parse::<i32>() {
-            Some(Word::Int(num))
-        } else if let Ok(num) = name.parse::<f32>() {
-            Some(Word::Float(num))
-        } else {
-            None
-        }
-    }
-    fn set(&mut self, name: &str, value: Word) {
-        if self.items.contains_key(name) {
-            // XXX display debug message another way
-            println!("Redefined {}", name);
-        }
-        self.items.insert(name.to_owned(), value);
-    }
-}
-
-impl Default for Dictionary {
-    fn default() -> Dictionary {
-        let mut dict = HashMap::new();
-        dict.insert(".\"".to_owned(), Word::Dotquote);
-        dict.insert(".".to_owned(), Word::Builtin(Builtin::Dot));
-        dict.insert("+".to_owned(), Word::Builtin(Builtin::Plus));
-        dict.insert("-".to_owned(), Word::Builtin(Builtin::Minus));
-        dict.insert("*".to_owned(), Word::Builtin(Builtin::Times));
-        dict.insert("/".to_owned(), Word::Builtin(Builtin::Divide));
-        dict.insert(":".to_owned(), Word::Colon);
-        dict.insert(";".to_owned(), Word::Semicolon);
-        dict.insert("if".to_owned(), Word::If);
-        dict.insert("then".to_owned(), Word::Then);
-        dict.insert("else".to_owned(), Word::Else);
-        dict.insert("(".to_owned(), Word::Parenthesis);
-        Dictionary { items: dict }
-    }
-}
+use dictionary::Dictionary;
+use word::Word;
+use branch::Branch;
 
 fn next_word(chars: &mut Chars) -> Option<String> {
     let mut word = String::new();
