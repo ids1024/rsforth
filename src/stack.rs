@@ -35,4 +35,11 @@ impl Stack {
             panic!("Stack underflow");
         }
     }
+    pub fn peaki(&self) -> i32 {
+        if let Some(value) = self.values.last() {
+            *value
+        } else {
+            panic!("Stack underflow");
+        }
+    }
 }

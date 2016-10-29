@@ -14,6 +14,9 @@ pub enum Builtin {
     LessEqual,
     GreaterEqual,
     Emit,
+    Dup,
+    Swap,
+    Drop,
 }
 
 impl Builtin {
@@ -68,6 +71,19 @@ impl Builtin {
             Builtin::Emit => {
                 let c = stack.popc();
                 print!("{}", c);
+            }
+            Builtin::Dup => {
+                let n = stack.peaki();
+                stack.pushi(n);
+            }
+            Builtin::Swap => {
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n2);
+                stack.pushi(n1);
+            }
+            Builtin::Drop => {
+                stack.popi();
             }
         }
     }

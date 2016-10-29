@@ -46,6 +46,9 @@ impl Default for Dictionary {
         dict.set("<=", Word::Builtin(Builtin::LessEqual));
         dict.set(">=", Word::Builtin(Builtin::GreaterEqual));
         dict.set("emit", Word::Builtin(Builtin::Emit));
+        dict.set("dup", Word::Builtin(Builtin::Dup));
+        dict.set("swap", Word::Builtin(Builtin::Swap));
+        dict.set("drop", Word::Builtin(Builtin::Drop));
         dict.set(":", Word::Colon);
         dict.set(";", Word::Semicolon);
         dict.set("if", Word::If);
