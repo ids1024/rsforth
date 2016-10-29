@@ -5,42 +5,8 @@ use std::str::Chars;
 use std::rc::Rc;
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, PartialEq)]
-enum Builtin {
-    dot,
-    plus,
-    minus,
-    times,
-    divide,
-}
-
-impl Builtin {
-    fn call(&self, stack: &mut Vec<i32>) {
-        match *self {
-            Builtin::dot => print!("{}", stack.pop().unwrap()),
-            Builtin::plus => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(n1 + n2);
-            },
-            Builtin::minus => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(n1 - n2);
-            },
-            Builtin::times => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(n1 * n2);
-            },
-            Builtin::divide => {
-                let n2 = stack.pop().unwrap();
-                let n1 = stack.pop().unwrap();
-                stack.push(n1 / n2);
-            },
-        }
-    }
-}
+mod builtins;
+use builtins::Builtin;
 
 #[derive(Clone, Debug, PartialEq)]
 enum Word {
