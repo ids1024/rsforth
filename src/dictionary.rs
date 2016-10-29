@@ -36,6 +36,11 @@ impl Default for Dictionary {
         dict.insert("-".to_owned(), Word::Builtin(Builtin::Minus));
         dict.insert("*".to_owned(), Word::Builtin(Builtin::Times));
         dict.insert("/".to_owned(), Word::Builtin(Builtin::Divide));
+        dict.insert("=".to_owned(), Word::Builtin(Builtin::Equal));
+        dict.insert("<".to_owned(), Word::Builtin(Builtin::LessThan));
+        dict.insert(">".to_owned(), Word::Builtin(Builtin::GreaterThan));
+        dict.insert("<=".to_owned(), Word::Builtin(Builtin::LessEqual));
+        dict.insert(">=".to_owned(), Word::Builtin(Builtin::GreaterEqual));
         dict.insert(":".to_owned(), Word::Colon);
         dict.insert(";".to_owned(), Word::Semicolon);
         dict.insert("if".to_owned(), Word::If);
