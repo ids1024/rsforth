@@ -30,7 +30,7 @@ enum Branch {
     int(i32),
     float(f32),
     ifelse(Vec<Branch>, Vec<Branch>),
-    dotquote(String)
+    dotquote(String),
 }
 
 impl Branch {
@@ -40,7 +40,7 @@ impl Branch {
                 for branch in branches.iter() {
                     branch.call(stack);
                 }
-            },
+            }
             &Branch::builtin(ref builtin) => builtin.call(stack),
             &Branch::int(int) => stack.push(int),
             &Branch::float(float) => stack.push(float as i32), //XXX
@@ -54,14 +54,14 @@ impl Branch {
                         branch.call(stack);
                     }
                 }
-            },
+            }
             &Branch::dotquote(ref text) => print!("{}", text),
         }
     }
 }
 
 struct Dictionary {
-    items: HashMap<String, Word>
+    items: HashMap<String, Word>,
 }
 
 impl Dictionary {
@@ -100,7 +100,7 @@ impl Default for Dictionary {
         dict.insert("then".to_owned(), Word::then);
         dict.insert("else".to_owned(), Word::_else);
         dict.insert("(".to_owned(), Word::parenthesis);
-        Dictionary{items: dict}
+        Dictionary { items: dict }
     }
 }
 
@@ -135,12 +135,12 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
             Word::dotquote => {
                 let text = chars.take_while(|x| *x != '"').collect();
                 Some(Branch::dotquote(text))
-            },
+            }
             Word::parenthesis => {
                 // Consumes all characters up to next )
                 chars.take_while(|x| *x != ')').count();
                 None
-            },
+            }
             Word::colon => {
                 let name = next_word(chars).unwrap();
                 let mut inner_branches: Vec<Branch> = Vec::new();
@@ -154,7 +154,7 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
                 }
                 dict.set(&name, Word::custom(Rc::new(inner_branches)));
                 None
-            },
+            }
             Word::_if => {
                 let mut ifbranches = Vec::new();
                 let mut elsebranches = Vec::new();
@@ -164,7 +164,7 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
                             if dict.get(&inner_word_str) == Some(Word::then) {
                                 break;
                             }
-                    }
+                        }
                         if let Some(branch) = parse_word(&inner_word_str, chars, dict) {
                             elsebranches.push(branch);
                         }
@@ -177,7 +177,7 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
                     }
                 }
                 Some(Branch::ifelse(ifbranches, elsebranches))
-            },
+            }
             Word::semicolon | Word::_else | Word::then => {
                 panic!("Invalid here");
             }
@@ -204,9 +204,9 @@ fn main() {
     let mut file = File::open(&path).unwrap();
     let mut code = String::new();
     file.read_to_string(&mut code).unwrap();
-    
+
     let branches = parse(&mut code.chars());
-    //println!("{:#?}", parse(&mut code.chars()));
+    // println!("{:#?}", parse(&mut code.chars()));
     let mut stack = Vec::new();
     for branch in branches {
         branch.call(&mut stack);

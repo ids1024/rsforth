@@ -15,22 +15,22 @@ impl Builtin {
                 let n2 = stack.pop().unwrap();
                 let n1 = stack.pop().unwrap();
                 stack.push(n1 + n2);
-            },
+            }
             Builtin::minus => {
                 let n2 = stack.pop().unwrap();
                 let n1 = stack.pop().unwrap();
                 stack.push(n1 - n2);
-            },
+            }
             Builtin::times => {
                 let n2 = stack.pop().unwrap();
                 let n1 = stack.pop().unwrap();
                 stack.push(n1 * n2);
-            },
+            }
             Builtin::divide => {
                 let n2 = stack.pop().unwrap();
                 let n1 = stack.pop().unwrap();
                 stack.push(n1 / n2);
-            },
+            }
         }
     }
 }
