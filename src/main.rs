@@ -12,6 +12,34 @@ enum Builtin {
     divide,
 }
 
+impl Builtin {
+    fn call(&self, stack: &Vec<i32>) {
+        match *self {
+            Builtin::dot => print!("{}", stack.pop()),
+            Bulltin::plus => {
+                n2 = stack.pop();
+                n1 = stack.pop();
+                stack.push(n1 + n2);
+            },
+            Bulltin::minus => {
+                n2 = stack.pop();
+                n1 = stack.pop();
+                stack.push(n1 - n2);
+            },
+            Bulltin::times => {
+                n2 = stack.pop();
+                n1 = stack.pop();
+                stack.push(n1 * n2);
+            },
+            Bulltin::divide => {
+                n2 = stack.pop();
+                n1 = stack.pop();
+                stack.push(n1 / n2);
+            },
+        }
+    }
+}
+
 #[derive(Clone)]
 enum Word {
     custom(Rc<Vec<String>>),
