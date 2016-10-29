@@ -1,6 +1,7 @@
 use std::rc::Rc;
 use builtins::Builtin;
 
+/// Represents a branch in the syntax tree
 #[derive(Debug, PartialEq)]
 pub enum Branch {
     Custom(Rc<Vec<Branch>>),

@@ -4,6 +4,9 @@ use dictionary::Dictionary;
 use word::Word;
 use branch::Branch;
 
+/// Takes a chars iterator and returns all characters up to the next whitespace,
+/// excluding the whitespace character. Returns `None` the `chars` iterator is
+/// exhausted.
 fn next_word(chars: &mut Chars) -> Option<String> {
     let mut word = String::new();
 

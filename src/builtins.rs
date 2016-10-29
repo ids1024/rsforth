@@ -1,3 +1,4 @@
+/// Represents a builtin function
 #[derive(Debug, Clone, PartialEq)]
 pub enum Builtin {
     Dot,
