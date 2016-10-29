@@ -1,0 +1,7 @@
+[package]
+name = "rsforth"
+version = "0.0.1"
+authors = ["Ian D. Scott <ian@iandouglasscott.com>"]
+description = "Forth interpreter"
+repository = "https://github.com/ids1024/rsforth"
+license = "MIT"
