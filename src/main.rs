@@ -67,6 +67,33 @@ enum Branch {
     dotquote(String)
 }
 
+impl Branch {
+    fn call(&self, stack: &mut Vec<i32>) {
+        match self {
+            &Branch::custom(ref branches) => {
+                for branch in branches.iter() {
+                    branch.call(stack);
+                }
+            },
+            &Branch::builtin(ref builtin) => builtin.call(stack),
+            &Branch::int(int) => stack.push(int),
+            &Branch::float(float) => stack.push(float as i32), //XXX
+            &Branch::ifelse(ref ifbranches, ref elsebranches) => {
+                if stack.pop().unwrap() == 0 {
+                    for branch in ifbranches.iter() {
+                        branch.call(stack);
+                    }
+                } else {
+                    for branch in elsebranches.iter() {
+                        branch.call(stack);
+                    }
+                }
+            },
+            &Branch::dotquote(ref text) => print!("{}", text),
+        }
+    }
+}
+
 struct Dictionary {
     items: HashMap<String, Word>
 }
@@ -115,7 +142,7 @@ fn next_word(chars: &mut Chars) -> Option<String> {
     let mut word = String::new();
 
     while let Some(c) = chars.next() {
-        if (c == ' ' || c == '\n') {
+        if c == ' ' || c == '\n' {
             if word.is_empty() {
                 continue;
             }
@@ -212,5 +239,10 @@ fn main() {
     let mut code = String::new();
     file.read_to_string(&mut code).unwrap();
     
-    println!("{:#?}", parse(&mut code.chars()));
+    let branches = parse(&mut code.chars());
+    //println!("{:#?}", parse(&mut code.chars()));
+    let mut stack = Vec::new();
+    for branch in branches {
+        branch.call(&mut stack);
+    }
 }
