@@ -8,7 +8,9 @@ pub struct Dictionary {
 
 impl Dictionary {
     pub fn get(&self, name: &str) -> Option<Word> {
-        if let Some(word) = self.items.get(name) {
+        // Make lookup case insensitive
+        let uppername = name.to_uppercase();
+        if let Some(word) = self.items.get(&uppername) {
             Some(word.clone())
         } else if let Ok(num) = name.parse::<i32>() {
             Some(Word::Int(num))
@@ -23,7 +25,8 @@ impl Dictionary {
             // XXX display debug message another way
             println!("Redefined {}", name);
         }
-        self.items.insert(name.to_owned(), value);
+        // Make lookup case insensitive
+        self.items.insert(name.to_uppercase(), value);
     }
 }
 
