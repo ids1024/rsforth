@@ -42,7 +42,7 @@ impl Builtin {
 
 #[derive(Clone)]
 enum Word {
-    custom(Rc<Vec<String>>),
+    custom(Rc<Vec<Word>>),
     builtin(Builtin),
     colon,
     semicolon,
@@ -55,10 +55,12 @@ enum Word {
 }
 
 enum Branch {
-    custom(Rc<Vec<String>>)
+    custom(Rc<Vec<Word>>)
     builtin(Builtin),
-    ifelse(Vec<String>, Vec<String>),
+    ifelse(Vec<Word>, Vec<Word>),
     dotquote(<String>)
+    int(i32),
+    float(f32),
 }
 
 struct Dictionary {
@@ -103,50 +105,53 @@ impl Default for Dictionary {
     }
 }
 
-fn parse_next_word(code: &Chars, dict: &Dictionary) -> Some(Branch) {
-    let mut word_str = String::new();
-    let mut branch = None;
+fn next_word(chars: &Chars) -> Some(String) {
+    let mut word = String::new();
+
     while let Some(c) = chars.next() {
-        if c == ' ' || c == '\n' {
-            if let Some(word) = dict.get(word_str) {
-                match word {
-                    //stop => { return (words, true); },
-                    Word::custom(_) | Word::builtin(_) | Word::int(_) | Word::float(_) => {
-                        branch = Some(Branch::word(word.clone()))
-                    }
-                    Word::dotquote => {
-                        let text = chars.take_while(|x| x != '"').collect();
-                        branch = Branch::dotquote(text);
-                    }
-                    Word::colon => {
-                        let mut name = String::new();
-                        while let Some(c) = chars.next() {
-                            if c == ' ' || c == '\n' {
-                                break;
-                            }
-                            name.push(c);
-                        }
-
-
-
-                    }
-                }
+        if (c == ' ' || c == '\n') && !string.is_empty() {
             break;
-            }
-        } else {
-            word_str.push(c);
         }
+        string.push(c);
     }
 
-    branch
+    if string.is_empty() {
+        // No input left
+        None
+    else {
+        Some(string)
+    }
+}
+
+fn parse_next_word(word_str: &str, chars: &Chars, dict: &Dictionary) -> Branch {
+    if let Some(word) = dict.get(word_str) {
+        match word {
+            //stop => { return (words, true); },
+            Word::custom(_) | Word::builtin(_) | Word::int(_) | Word::float(_) => {
+                Branch::word(word.clone())
+            }
+            Word::dotquote => {
+                let text = chars.take_while(|x| x != '"').collect();
+                Branch::dotquote(text)
+            }
+            Word::colon => {
+                let name = next_word(chars).unwrap();
+                
+
+
+            }
+        }
+    } else {
+        panic!("Word not in dictionary.");
+    }
 }
 
 fn parse(code: &Chars) -> Vec<Branch> {
     let mut branches: Vec<Branch> = Vec::new();
     let mut word_str = String::new();
     let dict = Dictionary::default();
-    while let Some(branch) = parse_next_word(code, &Dictionary) {
-        branches.push(branch);
+    while let Some(word_str) = next_word(code) {
+        branches.push(parse_word(&word_str, code, dict));
     }
 
     branches
