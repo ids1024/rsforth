@@ -1,5 +1,4 @@
 use std::env;
-use std::io;
 use std::io::prelude::*;
 use std::fs::File;
 use std::str::Chars;
@@ -74,8 +73,8 @@ struct Dictionary {
 
 impl Dictionary {
     fn get(&self, name: &str) -> Option<Word> {
-        if let Some(word) = self.get(name) {
-            Some(word)
+        if let Some(word) = self.items.get(name) {
+            Some(word.clone())
         } else if let Ok(num) = name.parse::<i32>() {
             Some(Word::int(num))
         } else if let Ok(num) = name.parse::<f32>() {
@@ -116,7 +115,10 @@ fn next_word(chars: &mut Chars) -> Option<String> {
     let mut word = String::new();
 
     while let Some(c) = chars.next() {
-        if (c == ' ' || c == '\n') && !word.is_empty() {
+        if (c == ' ' || c == '\n') {
+            if word.is_empty() {
+                continue;
+            }
             break;
         }
         word.push(c);
@@ -142,7 +144,8 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
                 Some(Branch::dotquote(text))
             },
             Word::parenthesis => {
-                chars.take_while(|x| *x != ')');
+                // Consumes all characters up to next )
+                chars.take_while(|x| *x != ')').count();
                 None
             },
             Word::colon => {
@@ -187,13 +190,12 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
             }
         }
     } else {
-        panic!("Word not in dictionary.");
+        panic!("Word '{}' not in dictionary.", word_str);
     }
 }
 
 fn parse(code: &mut Chars) -> Vec<Branch> {
     let mut branches: Vec<Branch> = Vec::new();
-    let mut word_str = String::new();
     let mut dict = Dictionary::default();
     while let Some(word_str) = next_word(code) {
         if let Some(branch) = parse_word(&word_str, code, &mut dict) {
