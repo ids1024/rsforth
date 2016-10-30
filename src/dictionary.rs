@@ -40,6 +40,10 @@ impl Default for Dictionary {
         dict.set("-", Word::Builtin(Builtin::Minus));
         dict.set("*", Word::Builtin(Builtin::Star));
         dict.set("/", Word::Builtin(Builtin::Slash));
+        dict.set("abs", Word::Builtin(Builtin::Abs));
+        dict.set("and", Word::Builtin(Builtin::And));
+        dict.set("or", Word::Builtin(Builtin::Or));
+        dict.set("xor", Word::Builtin(Builtin::Xor));
         dict.set("=", Word::Builtin(Builtin::Equals));
         dict.set("<", Word::Builtin(Builtin::LessThan));
         dict.set(">", Word::Builtin(Builtin::GreaterThan));
@@ -48,6 +52,9 @@ impl Default for Dictionary {
         dict.set("emit", Word::Builtin(Builtin::Emit));
         dict.set("dup", Word::Builtin(Builtin::Dup));
         dict.set("swap", Word::Builtin(Builtin::Swap));
+        dict.set("over", Word::Builtin(Builtin::Over));
+        dict.set("rot", Word::Builtin(Builtin::Rot));
+        dict.set("tuck", Word::Builtin(Builtin::Tuck));
         dict.set("drop", Word::Builtin(Builtin::Drop));
         dict.set(":", Word::Colon);
         dict.set(";", Word::Semicolon);

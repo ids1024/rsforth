@@ -8,6 +8,10 @@ pub enum Builtin {
     Minus,
     Star,
     Slash,
+    Abs,
+    And,
+    Or,
+    Xor,
     Equals,
     LessThan,
     GreaterThan,
@@ -16,6 +20,9 @@ pub enum Builtin {
     Emit,
     Dup,
     Swap,
+    Over,
+    Rot,
+    Tuck,
     Drop,
 }
 
@@ -42,6 +49,25 @@ impl Builtin {
                 let n2 = stack.popi();
                 let n1 = stack.popi();
                 stack.pushi(n1 / n2);
+            }
+            Builtin::Abs => {
+                let n = stack.popi();
+                stack.pushi(n.abs());
+            }
+            Builtin::And => {
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1 & n2);
+            }
+            Builtin::Or => {
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1 | n2);
+            }
+            Builtin::Xor => {
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1 ^ n2);
             }
             Builtin::Equals => {
                 let n2 = stack.popi();
@@ -81,6 +107,28 @@ impl Builtin {
                 let n1 = stack.popi();
                 stack.pushi(n2);
                 stack.pushi(n1);
+            }
+            Builtin::Over => {
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1);
+                stack.pushi(n2);
+                stack.pushi(n1);
+            }
+            Builtin::Rot => {
+                let n3 = stack.popi();
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n1);
+                stack.pushi(n3);
+                stack.pushi(n2);
+            }
+            Builtin::Tuck => {
+                let n2 = stack.popi();
+                let n1 = stack.popi();
+                stack.pushi(n2);
+                stack.pushi(n1);
+                stack.pushi(n2);
             }
             Builtin::Drop => {
                 stack.popi();
