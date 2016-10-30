@@ -29,7 +29,7 @@ pub enum Builtin {
 impl Builtin {
     pub fn call(&self, stack: &mut Stack) {
         macro_rules! stackexpr {
-            ( $($aname:ident : $atype:ty),+ => $value:expr ) => {
+            ( | $($aname:ident : $atype:ty),+ | $value:expr ) => {
                 {
                     $(
                         let $aname: $atype = stack.pop();
@@ -42,19 +42,19 @@ impl Builtin {
         use self::Builtin::*;
         match *self {
             Dot => print!("{}", stack.pop::<i32>()),
-            Plus => stackexpr!(n2: i32, n1: i32 => n1 + n2),
-            Minus => stackexpr!(n2: i32, n1: i32 => n1 - n2),
-            Star => stackexpr!(n2: i32, n1: i32 => n1 * n2),
-            Slash => stackexpr!(n2: i32, n1: i32 => n1 / n2),
-            Abs => stackexpr!(n: i32 => n.abs()),
-            And => stackexpr!(n2: i32, n1: i32 => n1 & n2),
-            Or => stackexpr!(n2: i32, n1: i32 => n1 | n2),
-            Xor => stackexpr!(n2: i32, n1: i32 => n1 ^ n2),
-            Equals => stackexpr!(n2: i32, n1: i32 => n1 == n2),
-            LessThan => stackexpr!(n2: i32, n1: i32 => n1 < n2),
-            GreaterThan => stackexpr!(n2: i32, n1: i32 => n1 > n2),
-            LessEqual => stackexpr!(n2: i32, n1: i32 => n1 <= n2),
-            GreaterEqual => stackexpr!(n2: i32, n1: i32 => n1 >= n2),
+            Plus => stackexpr!(|n2: i32, n1: i32| n1 + n2),
+            Minus => stackexpr!(|n2: i32, n1: i32| n1 - n2),
+            Star => stackexpr!(|n2: i32, n1: i32| n1 * n2),
+            Slash => stackexpr!(|n2: i32, n1: i32| n1 / n2),
+            Abs => stackexpr!(|n: i32| n.abs()),
+            And => stackexpr!(|n2: i32, n1: i32| n1 & n2),
+            Or => stackexpr!(|n2: i32, n1: i32| n1 | n2),
+            Xor => stackexpr!(|n2: i32, n1: i32| n1 ^ n2),
+            Equals => stackexpr!(|n2: i32, n1: i32| n1 == n2),
+            LessThan => stackexpr!(|n2: i32, n1: i32| n1 < n2),
+            GreaterThan => stackexpr!(|n2: i32, n1: i32| n1 > n2),
+            LessEqual => stackexpr!(|n2: i32, n1: i32| n1 <= n2),
+            GreaterEqual => stackexpr!(|n2: i32, n1: i32| n1 >= n2),
             Emit => print!("{}", stack.pop::<char>()),
             Dup => {
                 let n: i32 = stack.peak();
