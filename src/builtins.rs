@@ -28,7 +28,8 @@ pub enum Builtin {
 
 impl Builtin {
     pub fn call(&self, stack: &mut Stack) {
-        /// Allows defining Builtin using closure-like syntax
+        /// Allows defining a builtin using closure-like syntax. Note that the
+        /// arguments are in reverse order, as that is how the stack is laid out.
         macro_rules! stackexpr {
             ( | $($aname:ident : $atype:ty),+ | $value:expr ) => {
                 {
