@@ -22,10 +22,10 @@ impl Branch {
                 }
             }
             &Branch::Builtin(ref builtin) => builtin.call(stack),
-            &Branch::Int(int) => stack.pushi(int),
-            &Branch::Float(float) => stack.pushi(float as i32), //XXX
+            &Branch::Int(int) => stack.push(int),
+            &Branch::Float(float) => stack.push(float as i32), //XXX
             &Branch::IfElse(ref ifbranches, ref elsebranches) => {
-                if stack.popb() {
+                if stack.pop() {
                     for branch in ifbranches.iter() {
                         branch.call(stack);
                     }

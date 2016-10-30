@@ -3,41 +3,52 @@ pub struct Stack {
     values: Vec<i32>,
 }
 
+pub trait ForthNum {
+    fn to_forth_num(&self) -> i32;
+    fn from_forth_num(value: i32) -> Self;
+}
+
+impl ForthNum for i32 {
+    fn to_forth_num(&self) -> i32 {
+        *self
+    }
+    fn from_forth_num(value: i32) -> i32 {
+        value
+    }
+}
+
+impl ForthNum for bool {
+    fn to_forth_num(&self) -> i32 {
+        if *self { -1 } else { 0 }
+    }
+    fn from_forth_num(value: i32) -> bool {
+        value != 0
+    }
+}
+
+impl ForthNum for char {
+    fn to_forth_num(&self) -> i32 {
+        *self as i32
+    }
+    fn from_forth_num(value: i32) -> char {
+        value as u8 as char
+    }
+}
+
 impl Stack {
-    pub fn pushi(&mut self, value: i32) {
-        self.values.push(value);
+    pub fn push<T: ForthNum>(&mut self, value: T) {
+        self.values.push(value.to_forth_num());
     }
-    pub fn pushb(&mut self, value: bool) {
-        let num = if value { -1 } else { 0 };
-        self.values.push(num);
-    }
-    pub fn pushc(&mut self, value: char) {
-        self.values.push(value as i32);
-    }
-    pub fn popi(&mut self) -> i32 {
+    pub fn pop<T: ForthNum>(&mut self) -> T {
         if let Some(value) = self.values.pop() {
-            value
+            T::from_forth_num(value)
         } else {
             panic!("Stack underflow");
         }
     }
-    pub fn popb(&mut self) -> bool {
-        if let Some(value) = self.values.pop() {
-            value != 0
-        } else {
-            panic!("Stack underflow");
-        }
-    }
-    pub fn popc(&mut self) -> char {
-        if let Some(value) = self.values.pop() {
-            (value as u8) as char
-        } else {
-            panic!("Stack underflow");
-        }
-    }
-    pub fn peaki(&self) -> i32 {
+    pub fn peak<T: ForthNum>(&self) -> T {
         if let Some(value) = self.values.last() {
-            *value
+            T::from_forth_num(*value)
         } else {
             panic!("Stack underflow");
         }
