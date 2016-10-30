@@ -28,76 +28,32 @@ pub enum Builtin {
 
 impl Builtin {
     pub fn call(&self, stack: &mut Stack) {
+        macro_rules! stackexpr {
+            ( $($aname:ident : $atype:ty),+ => $value:expr ) => {
+                {
+                    $(
+                        let $aname: $atype = stack.pop();
+                    )+
+                    stack.push($value)
+                }
+            }
+        }
         match *self {
             Builtin::Dot => print!("{}", stack.pop::<i32>()),
-            Builtin::Plus => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 + n2);
-            }
-            Builtin::Minus => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 - n2);
-            }
-            Builtin::Star => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 * n2);
-            }
-            Builtin::Slash => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 / n2);
-            }
-            Builtin::Abs => {
-                let n: i32 = stack.pop();
-                stack.push(n.abs());
-            }
-            Builtin::And => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 & n2);
-            }
-            Builtin::Or => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 | n2);
-            }
-            Builtin::Xor => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 ^ n2);
-            }
-            Builtin::Equals => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 == n2);
-            }
-            Builtin::LessThan => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 < n2);
-            }
-            Builtin::GreaterThan => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 > n2);
-            }
-            Builtin::LessEqual => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 <= n2);
-            }
-            Builtin::GreaterEqual => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1 >= n2);
-            }
-            Builtin::Emit => {
-                let c: char = stack.pop();
-                print!("{}", c);
-            }
+            Builtin::Plus => stackexpr!(n2: i32, n1: i32 => n1 + n2),
+            Builtin::Minus => stackexpr!(n2: i32, n1: i32 => n1 - n2),
+            Builtin::Star => stackexpr!(n2: i32, n1: i32 => n1 * n2),
+            Builtin::Slash => stackexpr!(n2: i32, n1: i32 => n1 / n2),
+            Builtin::Abs => stackexpr!(n: i32 => n.abs()),
+            Builtin::And => stackexpr!(n2: i32, n1: i32 => n1 & n2),
+            Builtin::Or => stackexpr!(n2: i32, n1: i32 => n1 | n2),
+            Builtin::Xor => stackexpr!(n2: i32, n1: i32 => n1 ^ n2),
+            Builtin::Equals => stackexpr!(n2: i32, n1: i32 => n1 == n2),
+            Builtin::LessThan => stackexpr!(n2: i32, n1: i32 => n1 < n2),
+            Builtin::GreaterThan => stackexpr!(n2: i32, n1: i32 => n1 > n2),
+            Builtin::LessEqual => stackexpr!(n2: i32, n1: i32 => n1 <= n2),
+            Builtin::GreaterEqual => stackexpr!(n2: i32, n1: i32 => n1 >= n2),
+            Builtin::Emit => print!("{}", stack.pop::<char>()),
             Builtin::Dup => {
                 let n: i32 = stack.peak();
                 stack.push(n);
