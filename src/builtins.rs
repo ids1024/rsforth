@@ -38,40 +38,42 @@ impl Builtin {
                 }
             }
         }
+
+        use self::Builtin::*;
         match *self {
-            Builtin::Dot => print!("{}", stack.pop::<i32>()),
-            Builtin::Plus => stackexpr!(n2: i32, n1: i32 => n1 + n2),
-            Builtin::Minus => stackexpr!(n2: i32, n1: i32 => n1 - n2),
-            Builtin::Star => stackexpr!(n2: i32, n1: i32 => n1 * n2),
-            Builtin::Slash => stackexpr!(n2: i32, n1: i32 => n1 / n2),
-            Builtin::Abs => stackexpr!(n: i32 => n.abs()),
-            Builtin::And => stackexpr!(n2: i32, n1: i32 => n1 & n2),
-            Builtin::Or => stackexpr!(n2: i32, n1: i32 => n1 | n2),
-            Builtin::Xor => stackexpr!(n2: i32, n1: i32 => n1 ^ n2),
-            Builtin::Equals => stackexpr!(n2: i32, n1: i32 => n1 == n2),
-            Builtin::LessThan => stackexpr!(n2: i32, n1: i32 => n1 < n2),
-            Builtin::GreaterThan => stackexpr!(n2: i32, n1: i32 => n1 > n2),
-            Builtin::LessEqual => stackexpr!(n2: i32, n1: i32 => n1 <= n2),
-            Builtin::GreaterEqual => stackexpr!(n2: i32, n1: i32 => n1 >= n2),
-            Builtin::Emit => print!("{}", stack.pop::<char>()),
-            Builtin::Dup => {
+            Dot => print!("{}", stack.pop::<i32>()),
+            Plus => stackexpr!(n2: i32, n1: i32 => n1 + n2),
+            Minus => stackexpr!(n2: i32, n1: i32 => n1 - n2),
+            Star => stackexpr!(n2: i32, n1: i32 => n1 * n2),
+            Slash => stackexpr!(n2: i32, n1: i32 => n1 / n2),
+            Abs => stackexpr!(n: i32 => n.abs()),
+            And => stackexpr!(n2: i32, n1: i32 => n1 & n2),
+            Or => stackexpr!(n2: i32, n1: i32 => n1 | n2),
+            Xor => stackexpr!(n2: i32, n1: i32 => n1 ^ n2),
+            Equals => stackexpr!(n2: i32, n1: i32 => n1 == n2),
+            LessThan => stackexpr!(n2: i32, n1: i32 => n1 < n2),
+            GreaterThan => stackexpr!(n2: i32, n1: i32 => n1 > n2),
+            LessEqual => stackexpr!(n2: i32, n1: i32 => n1 <= n2),
+            GreaterEqual => stackexpr!(n2: i32, n1: i32 => n1 >= n2),
+            Emit => print!("{}", stack.pop::<char>()),
+            Dup => {
                 let n: i32 = stack.peak();
                 stack.push(n);
             }
-            Builtin::Swap => {
+            Swap => {
                 let n2: i32 = stack.pop();
                 let n1: i32 = stack.pop();
                 stack.push(n2);
                 stack.push(n1);
             }
-            Builtin::Over => {
+            Over => {
                 let n2: i32 = stack.pop();
                 let n1: i32 = stack.pop();
                 stack.push(n1);
                 stack.push(n2);
                 stack.push(n1);
             }
-            Builtin::Rot => {
+            Rot => {
                 let n3: i32 = stack.pop();
                 let n2: i32 = stack.pop();
                 let n1: i32 = stack.pop();
@@ -79,14 +81,14 @@ impl Builtin {
                 stack.push(n3);
                 stack.push(n2);
             }
-            Builtin::Tuck => {
+            Tuck => {
                 let n2: i32 = stack.pop();
                 let n1: i32 = stack.pop();
                 stack.push(n2);
                 stack.push(n1);
                 stack.push(n2);
             }
-            Builtin::Drop => {
+            Drop => {
                 stack.pop::<i32>();
             }
         }
