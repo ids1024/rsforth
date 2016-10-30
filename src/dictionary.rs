@@ -38,9 +38,9 @@ impl Default for Dictionary {
         dict.set(".", Word::Builtin(Builtin::Dot));
         dict.set("+", Word::Builtin(Builtin::Plus));
         dict.set("-", Word::Builtin(Builtin::Minus));
-        dict.set("*", Word::Builtin(Builtin::Times));
-        dict.set("/", Word::Builtin(Builtin::Divide));
-        dict.set("=", Word::Builtin(Builtin::Equal));
+        dict.set("*", Word::Builtin(Builtin::Star));
+        dict.set("/", Word::Builtin(Builtin::Slash));
+        dict.set("=", Word::Builtin(Builtin::Equals));
         dict.set("<", Word::Builtin(Builtin::LessThan));
         dict.set(">", Word::Builtin(Builtin::GreaterThan));
         dict.set("<=", Word::Builtin(Builtin::LessEqual));
@@ -54,7 +54,7 @@ impl Default for Dictionary {
         dict.set("if", Word::If);
         dict.set("then", Word::Then);
         dict.set("else", Word::Else);
-        dict.set("(", Word::Parenthesis);
+        dict.set("(", Word::Paren);
         // TODO Deal with standard library a better way
         let stdlib = include_str!("std.fs");
         // Stdlib should contain only definitions

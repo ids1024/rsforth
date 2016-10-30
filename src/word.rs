@@ -8,7 +8,7 @@ pub enum Word {
     Builtin(Builtin),
     Int(i32),
     Float(f32),
-    Parenthesis,
+    Paren,
     Colon,
     Semicolon,
     If,

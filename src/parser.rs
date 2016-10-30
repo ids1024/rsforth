@@ -39,7 +39,7 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
                 let text = chars.take_while(|x| *x != '"').collect();
                 Some(Branch::Dotquote(text))
             }
-            Word::Parenthesis => {
+            Word::Paren => {
                 // Consumes all characters up to next )
                 chars.take_while(|x| *x != ')').count();
                 None

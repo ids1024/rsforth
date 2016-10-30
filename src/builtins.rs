@@ -6,9 +6,9 @@ pub enum Builtin {
     Dot,
     Plus,
     Minus,
-    Times,
-    Divide,
-    Equal,
+    Star,
+    Slash,
+    Equals,
     LessThan,
     GreaterThan,
     LessEqual,
@@ -33,17 +33,17 @@ impl Builtin {
                 let n1 = stack.popi();
                 stack.pushi(n1 - n2);
             }
-            Builtin::Times => {
+            Builtin::Star => {
                 let n2 = stack.popi();
                 let n1 = stack.popi();
                 stack.pushi(n1 * n2);
             }
-            Builtin::Divide => {
+            Builtin::Slash => {
                 let n2 = stack.popi();
                 let n1 = stack.popi();
                 stack.pushi(n1 / n2);
             }
-            Builtin::Equal => {
+            Builtin::Equals => {
                 let n2 = stack.popi();
                 let n1 = stack.popi();
                 stack.pushb(n1 == n2);
