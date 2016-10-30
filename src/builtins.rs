@@ -28,6 +28,7 @@ pub enum Builtin {
 
 impl Builtin {
     pub fn call(&self, stack: &mut Stack) {
+        /// Allows defining Builtin using closure-like syntax
         macro_rules! stackexpr {
             ( | $($aname:ident : $atype:ty),+ | $value:expr ) => {
                 {
