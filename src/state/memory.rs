@@ -19,8 +19,8 @@ impl Memory {
         }
         self.values[addr as usize] = value.to_forth_num();
     }
-    pub fn new(&mut self, value: i32) -> i32 {
-        self.values.push(value);
+    pub fn new<T: ForthNum>(&mut self, value: T) -> i32 {
+        self.values.push(value.to_forth_num());
         self.here()
     }
     pub fn here(&self) -> i32 {

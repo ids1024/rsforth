@@ -112,7 +112,7 @@ impl Builtin {
                 state.memory.set(addr, n);
             }
             Here => stack.push(state.memory.here()),
-            Comma => { state.memory.new(stack.pop()); },
+            Comma => { state.memory.new(stack.pop::<i32>()); },
         }
     }
 }
