@@ -1,4 +1,3 @@
-use std::str::Chars;
 use std::rc::Rc;
 use dictionary::Dictionary;
 use word::Word;
@@ -8,7 +7,7 @@ use state::InterpState;
 /// Takes a chars iterator and returns all characters up to the next whitespace,
 /// excluding the whitespace character. Returns `None` the `chars` iterator is
 /// exhausted.
-fn next_word(chars: &mut Chars) -> Option<String> {
+fn next_word<T: Iterator<Item = char>>(chars: &mut T) -> Option<String> {
     let mut word = String::new();
 
     while let Some(c) = chars.next() {
@@ -29,7 +28,7 @@ fn next_word(chars: &mut Chars) -> Option<String> {
     }
 }
 
-fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary, state: &mut InterpState) -> Option<Branch> {
+fn parse_word<T: Iterator<Item = char>>(word_str: &str, chars: &mut T, dict: &mut Dictionary, state: &mut InterpState) -> Option<Branch> {
     if let Some(word) = dict.get(word_str) {
         match word {
             Word::Custom(x) => Some(Branch::Custom(x)),
@@ -103,7 +102,7 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary, state: &
     }
 }
 
-pub fn parse(code: &mut Chars, dict: &mut Dictionary, state: &mut InterpState) -> Vec<Branch> {
+pub fn parse<T: Iterator<Item = char>>(code: &mut T, dict: &mut Dictionary, state: &mut InterpState) -> Vec<Branch> {
     let mut branches: Vec<Branch> = Vec::new();
     while let Some(word_str) = next_word(code) {
         if let Some(branch) = parse_word(&word_str, code, dict, state) {
