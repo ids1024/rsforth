@@ -9,3 +9,5 @@
 : negate 0 swap - ;
 : false 0 ;
 : true -1 ;
+variable base
+10 base ! ( not used yet )

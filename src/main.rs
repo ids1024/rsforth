@@ -14,8 +14,8 @@ use dictionary::Dictionary;
 use state::InterpState;
 
 fn main() {
-    let mut dict = Dictionary::default();
     let mut state = InterpState::default();
+    let mut dict = Dictionary::new(&mut state);
 
     if let Some(path) = env::args().nth(1) {
         let mut file = File::open(&path).unwrap();

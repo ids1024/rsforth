@@ -30,10 +30,8 @@ impl Dictionary {
         // Make lookup case insensitive
         self.items.insert(name.to_uppercase(), value);
     }
-}
 
-impl Default for Dictionary {
-    fn default() -> Dictionary {
+    pub fn new(state: &mut InterpState) -> Dictionary {
         let mut dict = Dictionary { items: HashMap::new() };
         dict.set(".\"", Word::Dotquote);
         dict.set(".", Word::Builtin(Builtin::Dot));
@@ -68,9 +66,11 @@ impl Default for Dictionary {
         dict.set("variable", Word::Variable);
         // TODO Deal with standard library a better way
         let stdlib = include_str!("std.fs");
-        let mut state = InterpState::default();
-        // Stdlib should contain only definitions
-        assert!(parse(&mut stdlib.chars(), &mut dict, &mut state) == vec![]);
+        let branches = parse(&mut stdlib.chars(), &mut dict, state);
+        for branch in branches {
+            branch.call(state);
+        }
+
         dict
     }
 }
