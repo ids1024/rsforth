@@ -114,7 +114,9 @@ impl Builtin {
                 state.memory.set(addr, n);
             }
             Here => stack.push(state.memory.here()),
-            Comma => { state.memory.new(stack.pop::<i32>()); },
+            Comma => {
+                state.memory.new(stack.pop::<i32>());
+            }
             Depth => {
                 let len = stack.len();
                 stack.push(len);
