@@ -11,3 +11,4 @@
 : true -1 ;
 variable base
 10 base ! ( not used yet )
+: +! dup @ rot + swap ! ;

@@ -83,9 +83,9 @@ impl Builtin {
                 let n3: i32 = stack.pop();
                 let n2: i32 = stack.pop();
                 let n1: i32 = stack.pop();
-                stack.push(n1);
-                stack.push(n3);
                 stack.push(n2);
+                stack.push(n3);
+                stack.push(n1);
             }
             Tuck => {
                 let n2: i32 = stack.pop();
