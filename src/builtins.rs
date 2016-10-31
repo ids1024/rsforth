@@ -29,6 +29,8 @@ pub enum Builtin {
     Drop,
     Fetch,
     Store,
+    Here,
+    Comma,
 }
 
 impl Builtin {
@@ -109,6 +111,8 @@ impl Builtin {
                 let n: i32 = stack.pop();
                 state.memory.set(addr, n);
             }
+            Here => stack.push(state.memory.here()),
+            Comma => { state.memory.new(stack.pop()); },
         }
     }
 }

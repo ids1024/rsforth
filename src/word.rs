@@ -16,4 +16,5 @@ pub enum Word {
     Else,
     Dotquote,
     Variable,
+    Create,
 }

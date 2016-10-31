@@ -58,8 +58,10 @@ impl Dictionary {
         dict.set("rot", Word::Builtin(Builtin::Rot));
         dict.set("tuck", Word::Builtin(Builtin::Tuck));
         dict.set("drop", Word::Builtin(Builtin::Drop));
+        dict.set("here", Word::Builtin(Builtin::Here));
         dict.set("@", Word::Builtin(Builtin::Fetch));
         dict.set("!", Word::Builtin(Builtin::Store));
+        dict.set(",", Word::Builtin(Builtin::Comma));
         dict.set(":", Word::Colon);
         dict.set(";", Word::Semicolon);
         dict.set("if", Word::If);
@@ -67,6 +69,7 @@ impl Dictionary {
         dict.set("else", Word::Else);
         dict.set("(", Word::Paren);
         dict.set("variable", Word::Variable);
+        dict.set("create", Word::Create);
         // TODO Deal with standard library a better way
         let stdlib = include_str!("std.fs");
         let branches = parse(&mut stdlib.chars(), &mut dict, state);

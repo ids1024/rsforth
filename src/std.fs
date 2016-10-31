@@ -19,5 +19,9 @@ variable base
 : cell+ 1+ ;
 : cell- 1+ ;
 : cells ;
+: char+ 1+ ;
+: chars ;
 : align ;
 : aligned ;
+: c@ @ ;
+: c, , ;

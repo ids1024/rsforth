@@ -84,7 +84,13 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary, state: &
             }
             Word::Variable => {
                 let name = next_word(chars).unwrap();
-                let addr = state.memory.new();
+                let addr = state.memory.new(0);
+                dict.set(&name, Word::Int(addr));
+                None
+            }
+            Word::Create => {
+                let name = next_word(chars).unwrap();
+                let addr = state.memory.here() + 1;
                 dict.set(&name, Word::Int(addr));
                 None
             }
