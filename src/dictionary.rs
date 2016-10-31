@@ -43,7 +43,10 @@ impl Dictionary {
         dict.set("and", Word::Builtin(Builtin::And));
         dict.set("or", Word::Builtin(Builtin::Or));
         dict.set("xor", Word::Builtin(Builtin::Xor));
+        dict.set("lshift", Word::Builtin(Builtin::LShift));
+        dict.set("rshift", Word::Builtin(Builtin::RShift));
         dict.set("=", Word::Builtin(Builtin::Equals));
+        dict.set("<>", Word::Builtin(Builtin::NotEquals));
         dict.set("<", Word::Builtin(Builtin::LessThan));
         dict.set(">", Word::Builtin(Builtin::GreaterThan));
         dict.set("<=", Word::Builtin(Builtin::LessEqual));
