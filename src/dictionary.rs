@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use builtins::Builtin;
 use word::Word;
 use parser::parse;
+use state::InterpState;
 
 pub struct Dictionary {
     items: HashMap<String, Word>,
@@ -56,16 +57,20 @@ impl Default for Dictionary {
         dict.set("rot", Word::Builtin(Builtin::Rot));
         dict.set("tuck", Word::Builtin(Builtin::Tuck));
         dict.set("drop", Word::Builtin(Builtin::Drop));
+        dict.set("@", Word::Builtin(Builtin::Fetch));
+        dict.set("!", Word::Builtin(Builtin::Store));
         dict.set(":", Word::Colon);
         dict.set(";", Word::Semicolon);
         dict.set("if", Word::If);
         dict.set("then", Word::Then);
         dict.set("else", Word::Else);
         dict.set("(", Word::Paren);
+        dict.set("variable", Word::Variable);
         // TODO Deal with standard library a better way
         let stdlib = include_str!("std.fs");
+        let mut state = InterpState::default();
         // Stdlib should contain only definitions
-        assert!(parse(&mut stdlib.chars(), &mut dict) == vec![]);
+        assert!(parse(&mut stdlib.chars(), &mut dict, &mut state) == vec![]);
         dict
     }
 }

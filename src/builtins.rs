@@ -1,4 +1,4 @@
-use stack::Stack;
+use state::InterpState;
 
 /// Represents a builtin function
 #[derive(Debug, Clone, PartialEq)]
@@ -24,10 +24,14 @@ pub enum Builtin {
     Rot,
     Tuck,
     Drop,
+    Fetch,
+    Store,
 }
 
 impl Builtin {
-    pub fn call(&self, stack: &mut Stack) {
+    pub fn call(&self, state: &mut InterpState) {
+        let stack = &mut state.stack;
+
         /// Allows defining a builtin using closure-like syntax. Note that the
         /// arguments are in reverse order, as that is how the stack is laid out.
         macro_rules! stackexpr {
@@ -92,6 +96,12 @@ impl Builtin {
             }
             Drop => {
                 stack.pop::<i32>();
+            }
+            Fetch => stackexpr!(|addr: i32| state.memory.get::<i32>(addr)),
+            Store => {
+                let addr: i32 = stack.pop();
+                let n: i32 = stack.pop();
+                state.memory.set(addr, n);
             }
         }
     }

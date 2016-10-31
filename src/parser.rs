@@ -3,6 +3,7 @@ use std::rc::Rc;
 use dictionary::Dictionary;
 use word::Word;
 use branch::Branch;
+use state::InterpState;
 
 /// Takes a chars iterator and returns all characters up to the next whitespace,
 /// excluding the whitespace character. Returns `None` the `chars` iterator is
@@ -28,7 +29,7 @@ fn next_word(chars: &mut Chars) -> Option<String> {
     }
 }
 
-fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Option<Branch> {
+fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary, state: &mut InterpState) -> Option<Branch> {
     if let Some(word) = dict.get(word_str) {
         match word {
             Word::Custom(x) => Some(Branch::Custom(x)),
@@ -51,7 +52,7 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
                     if dict.get(&inner_word_str) == Some(Word::Semicolon) {
                         break;
                     }
-                    if let Some(branch) = parse_word(&inner_word_str, chars, dict) {
+                    if let Some(branch) = parse_word(&inner_word_str, chars, dict, state) {
                         inner_branches.push(branch);
                     }
                 }
@@ -68,18 +69,24 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
                                 break;
                             }
                         }
-                        if let Some(branch) = parse_word(&inner_word_str, chars, dict) {
+                        if let Some(branch) = parse_word(&inner_word_str, chars, dict, state) {
                             elsebranches.push(branch);
                         }
                         break;
                     } else if dict.get(&inner_word_str) == Some(Word::Then) {
                         break;
                     }
-                    if let Some(branch) = parse_word(&inner_word_str, chars, dict) {
+                    if let Some(branch) = parse_word(&inner_word_str, chars, dict, state) {
                         ifbranches.push(branch);
                     }
                 }
                 Some(Branch::IfElse(ifbranches, elsebranches))
+            }
+            Word::Variable => {
+                let name = next_word(chars).unwrap();
+                let addr = state.memory.new();
+                dict.set(&name, Word::Int(addr));
+                None
             }
             Word::Semicolon | Word::Else | Word::Then => {
                 panic!("Invalid here");
@@ -90,10 +97,10 @@ fn parse_word(word_str: &str, chars: &mut Chars, dict: &mut Dictionary) -> Optio
     }
 }
 
-pub fn parse(code: &mut Chars, dict: &mut Dictionary) -> Vec<Branch> {
+pub fn parse(code: &mut Chars, dict: &mut Dictionary, state: &mut InterpState) -> Vec<Branch> {
     let mut branches: Vec<Branch> = Vec::new();
     while let Some(word_str) = next_word(code) {
-        if let Some(branch) = parse_word(&word_str, code, dict) {
+        if let Some(branch) = parse_word(&word_str, code, dict, state) {
             branches.push(branch);
         }
     }

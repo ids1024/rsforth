@@ -7,32 +7,32 @@ mod dictionary;
 mod word;
 mod branch;
 mod parser;
-mod stack;
+mod state;
 
 use parser::parse;
-use stack::Stack;
 use dictionary::Dictionary;
+use state::InterpState;
 
 fn main() {
     let mut dict = Dictionary::default();
-    let mut stack = Stack::default();
+    let mut state = InterpState::default();
 
     if let Some(path) = env::args().nth(1) {
         let mut file = File::open(&path).unwrap();
         let mut code = String::new();
         file.read_to_string(&mut code).unwrap();
 
-        let branches = parse(&mut code.chars(), &mut dict);
+        let branches = parse(&mut code.chars(), &mut dict, &mut state);
         for branch in branches {
-            branch.call(&mut stack);
+            branch.call(&mut state);
         }
     } else {
         // Primitive REPL
         let stdin = std::io::stdin();
         for line in stdin.lock().lines() {
-            let branches = parse(&mut line.unwrap().chars(), &mut dict);
+            let branches = parse(&mut line.unwrap().chars(), &mut dict, &mut state);
             for branch in branches {
-                branch.call(&mut stack);
+                branch.call(&mut state);
             }
             std::io::stdout().flush().unwrap();
         }

@@ -1,6 +1,6 @@
 use std::rc::Rc;
 use builtins::Builtin;
-use stack::Stack;
+use state::InterpState;
 
 /// Represents a branch in the syntax tree
 #[derive(Debug, PartialEq)]
@@ -14,24 +14,24 @@ pub enum Branch {
 }
 
 impl Branch {
-    pub fn call(&self, stack: &mut Stack) {
+    pub fn call(&self, state: &mut InterpState) {
         match self {
             &Branch::Custom(ref branches) => {
                 for branch in branches.iter() {
-                    branch.call(stack);
+                    branch.call(state);
                 }
             }
-            &Branch::Builtin(ref builtin) => builtin.call(stack),
-            &Branch::Int(int) => stack.push(int),
-            &Branch::Float(float) => stack.push(float as i32), //XXX
+            &Branch::Builtin(ref builtin) => builtin.call(state),
+            &Branch::Int(int) => state.stack.push(int),
+            &Branch::Float(float) => state.stack.push(float as i32), //XXX
             &Branch::IfElse(ref ifbranches, ref elsebranches) => {
-                if stack.pop() {
+                if state.stack.pop() {
                     for branch in ifbranches.iter() {
-                        branch.call(stack);
+                        branch.call(state);
                     }
                 } else {
                     for branch in elsebranches.iter() {
-                        branch.call(stack);
+                        branch.call(state);
                     }
                 }
             }
