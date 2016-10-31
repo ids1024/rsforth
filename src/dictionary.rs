@@ -63,6 +63,7 @@ impl Dictionary {
         dict.set("!", Word::Builtin(Builtin::Store));
         dict.set(",", Word::Builtin(Builtin::Comma));
         dict.set("depth", Word::Builtin(Builtin::Depth));
+        dict.set("allot", Word::Builtin(Builtin::Allot));
         dict.set(":", Word::Colon);
         dict.set(";", Word::Semicolon);
         dict.set("if", Word::If);

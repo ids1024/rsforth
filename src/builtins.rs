@@ -32,6 +32,7 @@ pub enum Builtin {
     Here,
     Comma,
     Depth,
+    Allot,
 }
 
 impl Builtin {
@@ -117,7 +118,17 @@ impl Builtin {
             Depth => {
                 let len = stack.len();
                 stack.push(len);
-            },
+            }
+            Allot => {
+                let n = stack.pop();
+                if n < 0 {
+                    // TODO Free memory
+                } else {
+                    for _ in 0..n {
+                        state.memory.new(0);
+                    }
+                }
+            }
         }
     }
 }
