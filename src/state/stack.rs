@@ -23,4 +23,8 @@ impl Stack {
             panic!("Stack underflow");
         }
     }
+
+    pub fn len(&self) -> i32 {
+        self.values.len() as i32
+    }
 }

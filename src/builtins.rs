@@ -31,6 +31,7 @@ pub enum Builtin {
     Store,
     Here,
     Comma,
+    Depth,
 }
 
 impl Builtin {
@@ -113,6 +114,10 @@ impl Builtin {
             }
             Here => stack.push(state.memory.here()),
             Comma => { state.memory.new(stack.pop::<i32>()); },
+            Depth => {
+                let len = stack.len();
+                stack.push(len);
+            },
         }
     }
 }
