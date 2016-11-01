@@ -5,3 +5,6 @@ authors = ["Ian D. Scott <ian@iandouglasscott.com>"]
 description = "Forth interpreter"
 repository = "https://github.com/ids1024/rsforth"
 license = "MIT"
+
+[dependencies]
+rustyline = "1.0"

@@ -7,7 +7,7 @@ use state::InterpState;
 /// Takes a chars iterator and returns all characters up to the next whitespace,
 /// excluding the whitespace character. Returns `None` the `chars` iterator is
 /// exhausted.
-fn next_word<T: Iterator<Item = char>>(chars: &mut T) -> Option<String> {
+pub fn next_word<T: Iterator<Item = char>>(chars: &mut T) -> Option<String> {
     let mut word = String::new();
 
     while let Some(c) = chars.next() {
@@ -28,11 +28,11 @@ fn next_word<T: Iterator<Item = char>>(chars: &mut T) -> Option<String> {
     }
 }
 
-fn parse_word<T: Iterator<Item = char>>(word_str: &str,
-                                        chars: &mut T,
-                                        dict: &mut Dictionary,
-                                        state: &mut InterpState)
-                                        -> Option<Branch> {
+pub fn parse_word<T: Iterator<Item = char>>(word_str: &str,
+                                            chars: &mut T,
+                                            dict: &mut Dictionary,
+                                            state: &mut InterpState)
+                                            -> Option<Branch> {
     if let Some(word) = dict.get(word_str) {
         match word {
             Word::Custom(x) => Some(Branch::Custom(x)),

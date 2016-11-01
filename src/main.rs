@@ -1,17 +1,20 @@
-use std::env;
-use std::io::prelude::*;
-use std::fs::File;
-
 mod builtins;
 mod dictionary;
 mod word;
 mod branch;
 mod parser;
 mod state;
+mod rliterchar;
 
-use parser::parse;
+use std::env;
+use std::io::prelude::*;
+use std::fs::File;
+
+use parser::{parse, next_word, parse_word};
 use dictionary::Dictionary;
 use state::InterpState;
+use rliterchar::RLIterChar;
+
 
 fn main() {
     let mut state = InterpState::default();
@@ -27,14 +30,12 @@ fn main() {
             branch.call(&mut state);
         }
     } else {
-        // Primitive REPL
-        let stdin = std::io::stdin();
-        for line in stdin.lock().lines() {
-            let branches = parse(&mut line.unwrap().chars(), &mut dict, &mut state);
-            for branch in branches {
+        // REPL
+        let mut chars = RLIterChar::new();
+        while let Some(word_str) = next_word(&mut chars) {
+            if let Some(branch) = parse_word(&word_str, &mut chars, &mut dict, &mut state) {
                 branch.call(&mut state);
             }
-            std::io::stdout().flush().unwrap();
         }
     }
 }
