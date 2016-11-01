@@ -1,5 +1,7 @@
 use super::forthnum::ForthNum;
 
+/// Provides space for memory to be allocated by Forth words like VARIABLE
+/// and ALLOC
 #[derive(Default)]
 pub struct Memory {
     values: Vec<i32>,

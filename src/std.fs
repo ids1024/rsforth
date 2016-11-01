@@ -1,3 +1,5 @@
+( Where possible, RSForth implements words in Forth code )
+
 : cr 10 emit ;
 : space 32 emit ;
 : 0= 0 = ;

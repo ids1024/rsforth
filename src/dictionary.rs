@@ -4,6 +4,8 @@ use word::Word;
 use parser::parse;
 use state::InterpState;
 
+/// Represents the Forth dictionary, which maps words (Strings) to their
+/// implementations (the Word type)
 pub struct Dictionary {
     items: HashMap<String, Word>,
 }

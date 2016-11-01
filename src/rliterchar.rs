@@ -3,6 +3,9 @@ extern crate rustyline;
 use std::iter::once;
 use self::rustyline::error::ReadlineError;
 
+/// Provides a wrapper around the rustyline library that behaves as a char
+/// iterator, so it can be passed to the parser function that accept
+/// char iterators.
 pub struct RLIterChar {
     rl: rustyline::Editor<()>,
     chars: Vec<char>,

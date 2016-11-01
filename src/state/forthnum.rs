@@ -1,3 +1,4 @@
+/// Allows Rust data types to be converted to and from Forth types
 pub trait ForthNum {
     fn to_forth_num(&self) -> i32;
     fn from_forth_num(value: i32) -> Self;

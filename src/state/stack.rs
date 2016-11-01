@@ -1,5 +1,6 @@
 use super::forthnum::ForthNum;
 
+/// Represents Forth's stack
 #[derive(Default)]
 pub struct Stack {
     values: Vec<i32>,
