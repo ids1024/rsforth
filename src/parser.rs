@@ -65,22 +65,19 @@ pub fn parse_word<T: Iterator<Item = char>>(word_str: &str,
             Word::If => {
                 let mut ifbranches = Vec::new();
                 let mut elsebranches = Vec::new();
+                let mut inelse = false;
                 while let Some(inner_word_str) = next_word(chars) {
-                    if dict.get(&inner_word_str) == Some(Word::Else) {
-                        while let Some(inner_word_str) = next_word(chars) {
-                            if dict.get(&inner_word_str) == Some(Word::Then) {
-                                break;
-                            }
-                        }
-                        if let Some(branch) = parse_word(&inner_word_str, chars, dict, state) {
-                            elsebranches.push(branch);
-                        }
-                        break;
-                    } else if dict.get(&inner_word_str) == Some(Word::Then) {
-                        break;
+                    match dict.get(&inner_word_str) {
+                        Some(Word::Else) => inelse = true,
+                        Some(Word::Then) => break,
+                        _ => {}
                     }
                     if let Some(branch) = parse_word(&inner_word_str, chars, dict, state) {
-                        ifbranches.push(branch);
+                        if inelse {
+                            elsebranches.push(branch);
+                        } else {
+                            ifbranches.push(branch);
+                        }
                     }
                 }
                 Some(Branch::IfElse(ifbranches, elsebranches))
