@@ -8,3 +8,5 @@ license = "MIT"
 
 [dependencies]
 rustyline = "1.0"
+derivation = "0.1"
+enum_variants = "1.0"

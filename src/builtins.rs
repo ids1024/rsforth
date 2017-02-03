@@ -1,7 +1,7 @@
 use state::InterpState;
 
 /// Represents a builtin function
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Variants)]
 pub enum Builtin {
     Dot,
     Plus,
@@ -36,6 +36,41 @@ pub enum Builtin {
 }
 
 impl Builtin {
+    pub fn word(&self) -> &'static str {
+        match *self {
+            Builtin::Dot => ".",
+            Builtin::Plus => "+",
+            Builtin::Minus => "-",
+            Builtin::Star => "*",
+            Builtin::Slash => "/",
+            Builtin::Abs => "abs",
+            Builtin::And => "and",
+            Builtin::Or => "or",
+            Builtin::Xor => "xor",
+            Builtin::LShift => "lshift",
+            Builtin::RShift => "rshift",
+            Builtin::Equals => "=",
+            Builtin::NotEquals => "<>",
+            Builtin::LessThan => "<",
+            Builtin::GreaterThan => ">",
+            Builtin::LessEqual => "<=",
+            Builtin::GreaterEqual => ">=",
+            Builtin::Emit => "emit",
+            Builtin::Dup => "dup",
+            Builtin::Swap => "swap",
+            Builtin::Over => "over",
+            Builtin::Rot => "rot",
+            Builtin::Tuck => "tuck",
+            Builtin::Drop => "drop",
+            Builtin::Here => "here",
+            Builtin::Fetch => "@",
+            Builtin::Store => "!",
+            Builtin::Comma => ",",
+            Builtin::Depth => "depth",
+            Builtin::Allot => "allot",
+        }
+    }
+
     pub fn call(&self, state: &mut InterpState) {
         let stack = &mut state.stack;
 

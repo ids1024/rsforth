@@ -1,3 +1,7 @@
+#[macro_use]
+extern crate derivation;
+extern crate enum_variants;
+
 mod builtins;
 mod dictionary;
 mod word;
