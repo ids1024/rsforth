@@ -8,17 +8,9 @@ use state::InterpState;
 /// excluding the whitespace character. Returns `None` the `chars` iterator is
 /// exhausted.
 pub fn next_word<T: Iterator<Item = char>>(chars: &mut T) -> Option<String> {
-    let mut word = String::new();
-
-    while let Some(c) = chars.next() {
-        if c == ' ' || c == '\n' {
-            if word.is_empty() {
-                continue;
-            }
-            break;
-        }
-        word.push(c);
-    }
+    let word = chars.skip_while(|x| x.is_whitespace())
+        .take_while(|x| !x.is_whitespace())
+        .collect::<String>();
 
     if word.is_empty() {
         // No input left
