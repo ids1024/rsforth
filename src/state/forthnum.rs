@@ -1,32 +1,41 @@
-/// Allows Rust data types to be converted to and from Forth types
-pub trait ForthNum {
-    fn to_forth_num(&self) -> i32;
-    fn from_forth_num(value: i32) -> Self;
+/// Represents a value in Forth's stack
+#[derive(Clone, Copy)]
+pub struct ForthNum {
+    value: i32,
 }
 
-impl ForthNum for i32 {
-    fn to_forth_num(&self) -> i32 {
-        *self
-    }
-    fn from_forth_num(value: i32) -> i32 {
-        value
+impl From<i32> for ForthNum {
+    fn from(value: i32) -> ForthNum {
+        ForthNum{value: value}
     }
 }
 
-impl ForthNum for bool {
-    fn to_forth_num(&self) -> i32 {
-        if *self { -1 } else { 0 }
-    }
-    fn from_forth_num(value: i32) -> bool {
-        value != 0
+impl From<ForthNum> for i32 {
+    fn from(num: ForthNum) -> i32 {
+        num.value
     }
 }
 
-impl ForthNum for char {
-    fn to_forth_num(&self) -> i32 {
-        *self as i32
+impl From<bool> for ForthNum {
+    fn from(value: bool) -> ForthNum {
+        ForthNum{value: if value { -1 } else { 0 }}
     }
-    fn from_forth_num(value: i32) -> char {
-        value as u8 as char
+}
+
+impl From<ForthNum> for bool {
+    fn from(num: ForthNum) -> bool {
+        num.value != 0
+    }
+}
+
+impl From<char> for ForthNum {
+    fn from(value: char) -> ForthNum {
+        ForthNum{value: value as i32}
+    }
+}
+
+impl From<ForthNum> for char {
+    fn from(num: ForthNum) -> char {
+        num.value as u8 as char
     }
 }

@@ -4,25 +4,25 @@ use super::forthnum::ForthNum;
 /// and ALLOC
 #[derive(Default)]
 pub struct Memory {
-    values: Vec<i32>,
+    values: Vec<ForthNum>,
 }
 
 impl Memory {
-    pub fn get<T: ForthNum>(&self, addr: i32) -> T {
+    pub fn get<T: From<ForthNum>>(&self, addr: i32) -> T {
         if let Some(value) = self.values.get(addr as usize) {
-            T::from_forth_num(*value)
+            (*value).into()
         } else {
             panic!("Invalid memory address");
         }
     }
-    pub fn set<T: ForthNum>(&mut self, addr: i32, value: T) {
+    pub fn set<T: Into<ForthNum>>(&mut self, addr: i32, value: T) {
         if addr as usize > self.values.len() - 1 {
             panic!("Invalid memory address");
         }
-        self.values[addr as usize] = value.to_forth_num();
+        self.values[addr as usize] = value.into();
     }
-    pub fn new<T: ForthNum>(&mut self, value: T) -> i32 {
-        self.values.push(value.to_forth_num());
+    pub fn new<T: Into<ForthNum>>(&mut self, value: T) -> i32 {
+        self.values.push(value.into());
         self.here()
     }
     pub fn here(&self) -> i32 {

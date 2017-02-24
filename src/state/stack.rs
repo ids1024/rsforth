@@ -3,23 +3,25 @@ use super::forthnum::ForthNum;
 /// Represents Forth's stack
 #[derive(Default)]
 pub struct Stack {
-    values: Vec<i32>,
+    values: Vec<ForthNum>,
 }
 
 impl Stack {
-    pub fn push<T: ForthNum>(&mut self, value: T) {
-        self.values.push(value.to_forth_num());
+    pub fn push<T: Into<ForthNum>>(&mut self, value: T) {
+        self.values.push(value.into());
     }
-    pub fn pop<T: ForthNum>(&mut self) -> T {
+
+    pub fn pop<T: From<ForthNum>>(&mut self) -> T {
         if let Some(value) = self.values.pop() {
-            T::from_forth_num(value)
+            value.into()
         } else {
             panic!("Stack underflow");
         }
     }
-    pub fn peak<T: ForthNum>(&self) -> T {
+
+    pub fn peak<T: From<ForthNum>>(&self) -> T {
         if let Some(value) = self.values.last() {
-            T::from_forth_num(*value)
+            (*value).into()
         } else {
             panic!("Stack underflow");
         }
