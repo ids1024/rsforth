@@ -77,12 +77,14 @@ impl Builtin {
         /// Allows defining a builtin using closure-like syntax. Note that the
         /// arguments are in reverse order, as that is how the stack is laid out.
         macro_rules! stackexpr {
-            ( | $($aname:ident : $atype:ty),+ | $value:expr ) => {
+            ( | $($aname:ident : $atype:ty),+ | $($value:expr),+ ) => {
                 {
                     $(
                         let $aname: $atype = stack.pop();
                     )+
-                    stack.push($value)
+                    $(
+                        stack.push($value);
+                    )+
                 }
             }
         }
@@ -111,34 +113,10 @@ impl Builtin {
                 let n: i32 = stack.peak();
                 stack.push(n);
             }
-            Swap => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n2);
-                stack.push(n1);
-            }
-            Over => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n1);
-                stack.push(n2);
-                stack.push(n1);
-            }
-            Rot => {
-                let n3: i32 = stack.pop();
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n2);
-                stack.push(n3);
-                stack.push(n1);
-            }
-            Tuck => {
-                let n2: i32 = stack.pop();
-                let n1: i32 = stack.pop();
-                stack.push(n2);
-                stack.push(n1);
-                stack.push(n2);
-            }
+            Swap => stackexpr!(|n2: i32, n1: i32| n2, n1),
+            Over => stackexpr!(|n2: i32, n1: i32| n1, n2, n1),
+            Rot => stackexpr!(|n3: i32, n2: i32, n1: i32| n2, n3, n1),
+            Tuck => stackexpr!(|n2: i32, n1: i32| n2, n1, n2),
             Drop => {
                 stack.pop::<i32>();
             }
