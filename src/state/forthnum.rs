@@ -18,7 +18,13 @@ impl From<ForthNum> for i32 {
 
 impl From<bool> for ForthNum {
     fn from(value: bool) -> ForthNum {
-        ForthNum { value: if value { -1 } else { 0 } }
+        ForthNum {
+            value: if value {
+                -1
+            } else {
+                0
+            },
+        }
     }
 }
 
