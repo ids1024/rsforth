@@ -15,16 +15,16 @@ pub enum Branch {
 
 impl Branch {
     pub fn call(&self, state: &mut InterpState) {
-        match self {
-            &Branch::Custom(ref branches) => {
+        match *self {
+            Branch::Custom(ref branches) => {
                 for branch in branches.iter() {
                     branch.call(state);
                 }
             }
-            &Branch::Builtin(ref builtin) => builtin.call(state),
-            &Branch::Int(int) => state.stack.push(int),
-            &Branch::Float(float) => state.stack.push(float as i32), //XXX
-            &Branch::IfElse(ref ifbranches, ref elsebranches) => {
+            Branch::Builtin(ref builtin) => builtin.call(state),
+            Branch::Int(int) => state.stack.push(int),
+            Branch::Float(float) => state.stack.push(float as i32), //XXX
+            Branch::IfElse(ref ifbranches, ref elsebranches) => {
                 if state.stack.pop() {
                     for branch in ifbranches.iter() {
                         branch.call(state);
@@ -35,7 +35,7 @@ impl Branch {
                     }
                 }
             }
-            &Branch::Dotquote(ref text) => print!("{}", text),
+            Branch::Dotquote(ref text) => print!("{}", text),
         }
     }
 }
