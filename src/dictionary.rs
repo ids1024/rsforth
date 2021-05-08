@@ -2,7 +2,7 @@ use crate::builtins::Builtin;
 use crate::parser::parse;
 use crate::state::InterpState;
 use crate::word::Word;
-use enum_variants::Variants;
+use enum_iterator::IntoEnumIterator;
 use std::collections::HashMap;
 
 /// Represents the Forth dictionary, which maps words (Strings) to their
@@ -39,7 +39,7 @@ impl Dictionary {
             items: HashMap::new(),
         };
         dict.set(".\"", Word::Dotquote);
-        for i in Builtin::variants() {
+        for i in Builtin::into_enum_iter() {
             dict.set(i.word(), Word::Builtin(i));
         }
         dict.set(":", Word::Colon);

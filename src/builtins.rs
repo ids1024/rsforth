@@ -1,7 +1,8 @@
 use crate::state::InterpState;
+use enum_iterator::IntoEnumIterator;
 
 /// Represents a builtin function
-#[derive(Debug, Clone, PartialEq, Variants)]
+#[derive(Debug, Clone, PartialEq, IntoEnumIterator)]
 pub enum Builtin {
     Dot,
     Plus,
