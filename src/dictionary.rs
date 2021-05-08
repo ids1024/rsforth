@@ -1,9 +1,9 @@
-use builtins::Builtin;
+use crate::builtins::Builtin;
+use crate::parser::parse;
+use crate::state::InterpState;
+use crate::word::Word;
 use enum_variants::Variants;
-use parser::parse;
-use state::InterpState;
 use std::collections::HashMap;
-use word::Word;
 
 /// Represents the Forth dictionary, which maps words (Strings) to their
 /// implementations (the Word type)

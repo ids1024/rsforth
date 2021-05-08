@@ -1,8 +1,8 @@
-use branch::Branch;
-use dictionary::Dictionary;
-use state::InterpState;
+use crate::branch::Branch;
+use crate::dictionary::Dictionary;
+use crate::state::InterpState;
+use crate::word::Word;
 use std::rc::Rc;
-use word::Word;
 
 /// Takes a chars iterator and returns all characters up to the next whitespace,
 /// excluding the whitespace character. Returns `None` the `chars` iterator is

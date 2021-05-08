@@ -1,6 +1,4 @@
-extern crate rustyline;
-
-use self::rustyline::error::ReadlineError;
+use rustyline::error::ReadlineError;
 use std::iter::once;
 
 /// Provides a wrapper around the rustyline library that behaves as a char

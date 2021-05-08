@@ -1,5 +1,5 @@
-use builtins::Builtin;
-use state::InterpState;
+use crate::builtins::Builtin;
+use crate::state::InterpState;
 use std::rc::Rc;
 
 /// Represents a branch in the syntax tree

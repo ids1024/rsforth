@@ -1,5 +1,5 @@
-use branch::Branch;
-use builtins::Builtin;
+use crate::branch::Branch;
+use crate::builtins::Builtin;
 use std::rc::Rc;
 
 /// Represents a word implementation that can be bound to a name in the

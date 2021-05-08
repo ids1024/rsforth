@@ -1,4 +1,4 @@
-use state::InterpState;
+use crate::state::InterpState;
 
 /// Represents a builtin function
 #[derive(Debug, Clone, PartialEq, Variants)]

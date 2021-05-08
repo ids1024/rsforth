@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate derivation;
-extern crate enum_variants;
 
 mod branch;
 mod builtins;
@@ -14,10 +13,10 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
-use dictionary::Dictionary;
-use parser::{next_word, parse, parse_word};
-use rliterchar::RLIterChar;
-use state::InterpState;
+use crate::dictionary::Dictionary;
+use crate::parser::{next_word, parse, parse_word};
+use crate::rliterchar::RLIterChar;
+use crate::state::InterpState;
 
 fn main() {
     let mut state = InterpState::default();
