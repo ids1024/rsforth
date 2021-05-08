@@ -1,9 +1,9 @@
-use std::collections::HashMap;
-use enum_variants::Variants;
 use builtins::Builtin;
-use word::Word;
+use enum_variants::Variants;
 use parser::parse;
 use state::InterpState;
+use std::collections::HashMap;
+use word::Word;
 
 /// Represents the Forth dictionary, which maps words (Strings) to their
 /// implementations (the Word type)
@@ -35,7 +35,9 @@ impl Dictionary {
     }
 
     pub fn new(state: &mut InterpState) -> Dictionary {
-        let mut dict = Dictionary { items: HashMap::new() };
+        let mut dict = Dictionary {
+            items: HashMap::new(),
+        };
         dict.set(".\"", Word::Dotquote);
         for i in Builtin::variants() {
             dict.set(i.word(), Word::Builtin(i));

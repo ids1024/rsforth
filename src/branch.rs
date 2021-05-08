@@ -1,6 +1,6 @@
-use std::rc::Rc;
 use builtins::Builtin;
 use state::InterpState;
+use std::rc::Rc;
 
 /// Represents a branch in the syntax tree
 #[derive(Debug, PartialEq)]

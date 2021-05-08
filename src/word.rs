@@ -1,6 +1,6 @@
-use std::rc::Rc;
-use builtins::Builtin;
 use branch::Branch;
+use builtins::Builtin;
+use std::rc::Rc;
 
 /// Represents a word implementation that can be bound to a name in the
 /// Dictionary

@@ -1,9 +1,9 @@
 mod forthnum;
-mod stack;
 mod memory;
+mod stack;
 
-use self::stack::Stack;
 use self::memory::Memory;
+use self::stack::Stack;
 
 #[derive(Default)]
 pub struct InterpState {

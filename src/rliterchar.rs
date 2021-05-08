@@ -1,7 +1,7 @@
 extern crate rustyline;
 
-use std::iter::once;
 use self::rustyline::error::ReadlineError;
+use std::iter::once;
 
 /// Provides a wrapper around the rustyline library that behaves as a char
 /// iterator, so it can be passed to the parser function that accept
@@ -41,8 +41,7 @@ impl Iterator for RLIterChar {
                     self.chars = line.chars().chain(once('\n')).rev().collect();
                     self.chars.pop()
                 }
-                Err(ReadlineError::Interrupted) |
-                Err(ReadlineError::Eof) => None,
+                Err(ReadlineError::Interrupted) | Err(ReadlineError::Eof) => None,
                 _ => panic!("Readline error"), // TODO: handle better
             }
         }

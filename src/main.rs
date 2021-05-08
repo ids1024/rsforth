@@ -2,23 +2,22 @@
 extern crate derivation;
 extern crate enum_variants;
 
+mod branch;
 mod builtins;
 mod dictionary;
-mod word;
-mod branch;
 mod parser;
-mod state;
 mod rliterchar;
+mod state;
+mod word;
 
 use std::env;
-use std::io::prelude::*;
 use std::fs::File;
+use std::io::prelude::*;
 
-use parser::{parse, next_word, parse_word};
 use dictionary::Dictionary;
-use state::InterpState;
+use parser::{next_word, parse, parse_word};
 use rliterchar::RLIterChar;
-
+use state::InterpState;
 
 fn main() {
     let mut state = InterpState::default();
